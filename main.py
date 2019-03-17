@@ -19,10 +19,19 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 def calculate_fee(bot, update, args):
     FEE_FUNC_CALLS_TOTAL.inc()
-    amount = float(' '.join(args))
-    result = round((amount + (amount + amount * 0.0035) * 0.0035), 2)
-    bot.send_message(chat_id=update.message.chat_id,
-                     text="{0} UAH".format(result))
+    for arg in args:
+        try:
+            float(arg)
+        except ValueError:
+            bot.send_message(chat_id=update.message.chat_id,
+                             text="Numbers only are accepted, skipping...")
+            continue
+        arg = float(arg)
+        result = round((arg + (arg + arg * 0.0035) * 0.0035), 2)
+        bot.send_message(chat_id=update.message.chat_id,
+                         text="{0} UAH".format(result))
+    print("")
+    print(update)
 
 
 def start(bot, update):
